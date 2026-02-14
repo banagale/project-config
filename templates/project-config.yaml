@@ -1,0 +1,44 @@
+# project-config.yaml - Project configuration
+#
+# Copy this template to your project root and fill in the TODO values.
+# Remove any sections you don't need.
+
+schema_version: 1
+
+repo: TODO          # your repository name
+description: TODO   # short project description
+
+# ─────────────────────────────────────────────────────────────────
+# Git Workflow
+# ─────────────────────────────────────────────────────────────────
+
+canonical_branch: main
+remote: origin
+
+sync:
+  strategy: merge
+  push_landing: true
+  push_to_canonical: false
+
+# ─────────────────────────────────────────────────────────────────
+# Task Management
+# ─────────────────────────────────────────────────────────────────
+
+task:
+  type: none    # set to "bloon" or another task manager, or remove this section
+
+# ─────────────────────────────────────────────────────────────────
+# Cross-Project Availability
+# ─────────────────────────────────────────────────────────────────
+
+cross_project_availability:
+  skills: none  # set to "all" to share this project's AI skills globally
+
+# ─────────────────────────────────────────────────────────────────
+# Worktrees
+# ─────────────────────────────────────────────────────────────────
+
+worktrees:
+  - name: primary
+    path: TODO  # e.g. ~/code/projects/my-project
+    landing_branch: main

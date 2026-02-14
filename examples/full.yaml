@@ -1,0 +1,197 @@
+# Full project-config.yaml reference
+#
+# This example shows EVERY field in the schema with comments explaining
+# its purpose and allowed values. This is a reference, not a real project.
+
+
+# ─────────────────────────────────────────────────────────────────
+# Identity
+# ─────────────────────────────────────────────────────────────────
+
+# Required. Schema version for forward compatibility.
+# Currently the only valid value is 1.
+schema_version: 1
+
+# Required. Repository name. Should match the git repo name.
+# Used as a unique identifier by tools that consume this file.
+repo: my-project
+
+# Optional. Short human-readable description of the project.
+# Displayed in dashboards, status commands, and project listings.
+description: A full-featured example showing every project-config field
+
+
+# ─────────────────────────────────────────────────────────────────
+# Git Workflow
+# ─────────────────────────────────────────────────────────────────
+
+# Required. The source-of-truth branch that all worktrees sync against.
+# Typically "main" or "master".
+canonical_branch: main
+
+# Optional. Git remote name. Defaults to "origin" if omitted.
+remote: origin
+
+# Optional. Controls how worktrees sync with the canonical branch.
+sync:
+  # How to integrate changes from canonical into landing branches.
+  # Values: "merge" (default), "rebase", "ff-only"
+  strategy: merge
+
+  # Whether to push the landing branch to remote after syncing.
+  # Default: true
+  push_landing: true
+
+  # Whether to push changes from landing branches to the canonical branch.
+  # Set to false if you use pull requests instead of direct pushes.
+  # Default: false
+  push_to_canonical: false
+
+
+# ─────────────────────────────────────────────────────────────────
+# Hooks
+# ─────────────────────────────────────────────────────────────────
+
+# Optional. Shell scripts executed at specific points in the workflow.
+# Most hooks accept: null (disabled) or a single path string.
+# Only post_init supports a list of paths (executed in order).
+# Paths may be absolute, relative to the config file (project root), or use ~.
+hooks:
+  # Runs once before any worktrees are synced (batch start).
+  pre_sync_all: null
+
+  # Runs once after all worktrees have been synced (batch end).
+  post_sync_all: null
+
+  # Runs before each individual worktree syncs.
+  # Receives environment variables: WORKTREE_NAME, WORKTREE_PATH, LANDING_BRANCH
+  pre_sync: null
+
+  # Runs after each individual worktree syncs.
+  # Receives environment variables: WORKTREE_NAME, WORKTREE_PATH, LANDING_BRANCH
+  post_sync: null
+
+  # Runs after a new worktree is created via init/add.
+  # Receives environment variables: WORKTREE_NAME, WORKTREE_PATH, LANDING_BRANCH
+  # Common use: auto-assign iTerm2 tab colors, run setup scripts.
+  post_init:
+    - ~/tools/hooks/setup-worktree.sh
+    - ~/tools/hooks/post-init-color.sh
+
+
+# ─────────────────────────────────────────────────────────────────
+# Task Management
+# ─────────────────────────────────────────────────────────────────
+
+# Optional. Integrates with a task management system.
+task:
+  # The task manager type.
+  # Standardized values: "bloon", "none".
+  # Reserved for future standardization: "linear", "github", "jira".
+  # Set to "none" or omit entirely to disable task integration.
+  type: bloon
+
+  # Project name in the task system. Defaults to the repo name if omitted.
+  project: my-project
+
+  # Default priority for new tasks. Scale: 0 (critical) to 3 (low).
+  # Default: 2 (medium)
+  default_priority: 2
+
+  # Auto-focus newly created tasks. Default: true
+  autofocus: true
+
+  # Require validation before marking tasks done. Default: false
+  require_validation: false
+
+  # Prefix for auto-generated tags. Null means no prefix.
+  tags_prefix: null
+
+  # External PM system integrations (forward-compatibility; tool support may vary
+  # while corresponding task.type values are reserved).
+  external:
+    linear:
+      team: ACME
+      skill: linear-integration
+      user_id: "208eb406-9845-4701-9a9e-33b3c29ddca9"
+    github:
+      repo: owner/my-project
+      skill: github-issues
+
+
+# ─────────────────────────────────────────────────────────────────
+# Cross-Project Availability
+# ─────────────────────────────────────────────────────────────────
+
+# Optional. Controls whether this project's AI artifacts (skills, etc.)
+# are available to other projects on the same machine.
+cross_project_availability:
+  # Whether AI skills from this project are shared globally.
+  # Values: "all" (share everything), "none" (project-local only),
+  # or a list of specific skill names to share.
+  skills: all
+
+  # Whether AI agents from this project are shared globally.
+  # Same values as skills. Default: "none"
+  agents: none
+
+
+# ─────────────────────────────────────────────────────────────────
+# iTerm2 Tab Colors
+# ─────────────────────────────────────────────────────────────────
+
+# Optional. Hex color palette for iTerm2 tab coloring.
+# Colors are assigned to worktrees in order (first color to primary, etc.).
+# Used by post_init hooks to set tab colors automatically.
+# If omitted, the hook's built-in default palette is used.
+color_palette:
+  - "#FBBF24"  # Amber
+  - "#22C55E"  # Emerald
+  - "#3B82F6"  # Blue
+  - "#F97316"  # Orange
+  - "#8B5CF6"  # Violet
+
+
+# ─────────────────────────────────────────────────────────────────
+# Worktrees
+# ─────────────────────────────────────────────────────────────────
+
+# Optional. List of git worktrees for this project. Defaults to [].
+# When using worktree-managed tooling, include at least the primary worktree.
+worktrees:
+  # The primary worktree (main checkout directory).
+  - name: primary
+    # Filesystem path. Supports ~ expansion.
+    path: ~/code/projects/my-project
+    # The branch this worktree lands on. Usually matches canonical_branch
+    # for the primary worktree.
+    landing_branch: main
+    # Optional freeform metadata. Ignored by sync tooling, but used by
+    # hooks and dashboards.
+    meta:
+      color: "#FBBF24"
+
+  # A secondary worktree for parallel development.
+  - name: wb1
+    path: ~/code/projects/my-project-wb1
+    landing_branch: main-wb1
+    meta:
+      color: "#22C55E"
+
+  # A feature-specific worktree (non-standard naming is fine).
+  - name: redesign
+    path: ~/code/projects/my-project-redesign
+    landing_branch: feat/redesign
+    meta:
+      color: "#3B82F6"
+
+  # An archived worktree. Excluded from sync-all and status commands.
+  # The worktree directory may or may not still exist on disk.
+  - name: old-experiment
+    path: ~/code/projects/my-project-old-experiment
+    landing_branch: feat/old-experiment
+    archived: true
+    meta:
+      archived_date: "2025-12-15"
+      note: "Experiment concluded, results merged to main"
+      stash: "WIP changes stashed before archiving (archived 2025-12-15)"

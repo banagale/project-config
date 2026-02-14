@@ -1,0 +1,21 @@
+# Minimal project-config.yaml - single project, no worktrees complexity
+#
+# Based on a simple single-developer macOS CLI tool.
+# Only the essentials: identity, git workflow, and a single worktree.
+
+schema_version: 1
+repo: hangmail
+description: macOS Apple Mail CLI
+canonical_branch: main
+remote: origin
+
+task:
+  type: bloon
+
+cross_project_availability:
+  skills: all
+
+worktrees:
+  - name: primary
+    path: ~/code/projects/hangmail
+    landing_branch: main

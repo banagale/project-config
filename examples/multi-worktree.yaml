@@ -1,0 +1,46 @@
+# Multi-worktree project with sync, hooks, and cross-project skills
+#
+# Based on a project with multiple concurrent workstreams,
+# automated sync, post-init hooks, and iTerm2 tab coloring.
+
+schema_version: 1
+repo: bloon
+description: Cross-project task management CLI
+canonical_branch: main
+remote: origin
+
+cross_project_availability:
+  skills: all
+
+sync:
+  strategy: merge
+  push_landing: true
+  push_to_canonical: true
+
+hooks:
+  post_init:
+    - ~/tools/hooks/setup-worktree.sh
+    - ~/tools/hooks/post-init-color.sh
+
+color_palette:
+  - "#FBBF24"
+  - "#22C55E"
+  - "#3B82F6"
+  - "#F97316"
+
+worktrees:
+  - name: primary
+    path: ~/code/projects/bloon
+    landing_branch: main
+    meta:
+      color: '#FBBF24'
+  - name: wb1
+    path: ~/code/projects/bloon-wb1
+    landing_branch: main-wb1
+    meta:
+      color: '#22C55E'
+  - name: wb2
+    path: ~/code/projects/bloon-wb2
+    landing_branch: main-wb2
+    meta:
+      color: '#3B82F6'

@@ -1,0 +1,9 @@
+schema_version: 1
+repo: project-config
+description: Canonical specification for the project-config.yaml format
+canonical_branch: main
+remote: origin
+task:
+  type: bloon
+cross_project_availability:
+  skills: none

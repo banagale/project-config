@@ -45,11 +45,36 @@ This project uses [bloon](https://github.com/banagale/bloon) for task tracking (
 - `/start` - session start with task suggestions
 - `/bloon-resume pr-<id>` - switch to a specific task mid-session
 
+## JSON Schema
+
+`schema/v1.schema.json` is the machine-readable JSON Schema for the v1 spec. It enables editor autocomplete and validation for `project-config.yaml` files.
+
+**Keep it in sync.** Any change to `spec/v1.md` that adds, removes, or modifies a field must include a corresponding update to the JSON Schema. This includes changes to types, defaults, enums, and required fields.
+
+**Validate before committing.** Before committing spec, schema, or example changes, validate all examples and the root `project-config.yaml` against the schema:
+
+```bash
+python3 -c "
+import json, yaml
+from jsonschema import validate, ValidationError
+schema = json.load(open('schema/v1.schema.json'))
+for f in ['examples/minimal.yaml', 'examples/multi-worktree.yaml', 'examples/full.yaml', 'examples/local-only.yaml', 'project-config.yaml']:
+    with open(f) as fh: config = yaml.safe_load(fh)
+    try:
+        validate(instance=config, schema=schema)
+        print(f'  {f}: PASS')
+    except ValidationError as e:
+        print(f'  {f}: FAIL - {e.message}')
+"
+```
+
+New examples must also be added to this validation list.
+
 ## Working With This Repo
 
 - Spec changes should be proposed as PRs with clear rationale
 - Examples should reflect real usage patterns, not contrived demos
-- Schema files should stay in sync with the spec
+- Schema, spec, and examples must stay in sync. A change to one likely requires updates to the others.
 - Keep the spec precise but readable
 
 ## Conventions

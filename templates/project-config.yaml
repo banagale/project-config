@@ -13,7 +13,7 @@ description: TODO   # short project description
 # ─────────────────────────────────────────────────────────────────
 
 canonical_branch: main
-remote: origin
+remote: origin  # set to null for local-only projects (no remote)
 
 sync:
   strategy: merge

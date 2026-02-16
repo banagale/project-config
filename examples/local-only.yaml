@@ -1,0 +1,28 @@
+# Local-only project - no git remote
+#
+# Based on a project containing sensitive personal data (financial records,
+# tax documents, health information) that cannot be pushed to any remote.
+# Uses worktrees for parallel work, syncing via local branches only.
+
+schema_version: 1
+repo: administration
+description: Personal finance, tax, and insurance records
+
+canonical_branch: main
+remote: null  # local-only, no remote
+
+sync:
+  strategy: merge
+  push_landing: false
+  push_to_canonical: false
+
+task:
+  type: bloon
+
+worktrees:
+  - name: primary
+    path: ~/code/personal/administration
+    landing_branch: main
+  - name: wb1
+    path: ~/code/personal/administration-wb1
+    landing_branch: main-wb1

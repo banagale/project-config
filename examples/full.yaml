@@ -30,6 +30,7 @@ description: A full-featured example showing every project-config field
 canonical_branch: main
 
 # Optional. Git remote name. Defaults to "origin" if omitted.
+# Set to null for local-only projects with no remote (e.g., sensitive data).
 remote: origin
 
 # Optional. Controls how worktrees sync with the canonical branch.

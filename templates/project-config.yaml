@@ -17,7 +17,7 @@ remote: origin  # set to null for local-only projects (no remote)
 
 sync:
   strategy: merge
-  push_landing: true
+  push_landing: false
   push_to_canonical: false
 
 # ─────────────────────────────────────────────────────────────────
